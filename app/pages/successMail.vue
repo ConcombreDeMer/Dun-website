@@ -104,27 +104,29 @@ onMounted(() => {
   const isIOS = /iPad|iPhone|iPod/.test(userAgent);
   const isAndroid = /Android/.test(userAgent);
   
-  if (isIOS || isAndroid) {
+  if (isIOS) {
     isNativeApp.value = true;
     
-    // Essayer d'ouvrir l'app avec un délai court
+    // Essayer d'ouvrir l'app iOS avec le custom URL scheme
     const deepLinkTimeout = setTimeout(() => {
       try {
-        // Essayer d'ouvrir le deep link
-        window.location.href = 'https://dun-app.com/successMail';
+        window.location.href = 'dun://successMail';
       } catch (e) {
         // Si ça échoue, rester sur la page web
+        console.log('App not available');
       }
     }, 500);
     
     // Nettoyer le timeout si la page est quittée
     return () => clearTimeout(deepLinkTimeout);
+  } else if (isAndroid) {
+    isNativeApp.value = true;
   }
 });
 
 const openApp = () => {
   try {
-    window.location.href = 'https://dun-app.com/successMail';
+    window.location.href = 'dun://successMail';
   } catch (e) {
     console.error('Erreur lors de l\'ouverture de l\'app:', e);
   }
