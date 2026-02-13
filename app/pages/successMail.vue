@@ -110,7 +110,7 @@ onMounted(() => {
     // Essayer d'ouvrir l'app iOS avec le custom URL scheme
     const deepLinkTimeout = setTimeout(() => {
       try {
-        window.location.href = 'dun://successMail';
+        window.location.href = 'dun://onboarding/successMail';
       } catch (e) {
         // Si ça échoue, rester sur la page web
         console.log('App not available');
@@ -126,7 +126,7 @@ onMounted(() => {
 
 const openApp = () => {
   try {
-    window.location.href = 'dun://successMail';
+    window.location.href = 'dun://onboarding/successMail';
   } catch (e) {
     console.error('Erreur lors de l\'ouverture de l\'app:', e);
   }
