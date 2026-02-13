@@ -19,11 +19,13 @@
         <h1 class="hero-title">Organise ta journée</h1>
         <p class="hero-subtitle">La productivité simplifiée. Planifie simplement, atteins tes objectifs.</p>
         
-        <!-- Mockup Placeholder -->
+        <!-- Mockup -->
         <div class="mockup-container-hero">
-          <div class="mockup-placeholder">
-            <div class="placeholder-text">Mockup de l'app</div>
-          </div>
+          <img 
+            src="/mockups/1.png" 
+            alt="Mockup de l'application Dun" 
+            class="mockup-image"
+          />
         </div>
       </div>
     </section>
@@ -334,6 +336,20 @@ body {
   width: 100%;
   max-width: 500px;
   height: 400px;
+}
+
+.mockup-container-hero .mockup-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  display: block;
+
+  &:hover {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+  }
 }
 
 // Features Section

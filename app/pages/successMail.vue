@@ -67,7 +67,10 @@
 
         <!-- CTA Buttons -->
         <div class="actions">
-          <NuxtLink to="/" class="button button-primary">
+          <button v-if="isNativeApp" @click="openApp" class="button button-primary">
+            Ouvrir dans l'app Dun
+          </button>
+          <NuxtLink v-if="!isNativeApp" to="/" class="button button-primary">
             Retour à l'accueil
           </NuxtLink>
           <a href="mailto:contact@dun.app" class="button button-secondary">
@@ -88,11 +91,44 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+
+const isNativeApp = ref(false);
+const appOpened = ref(false);
 
 onMounted(() => {
   document.querySelector('.success-page')?.classList.add('loaded');
+  
+  // Détection du système (iOS/Android)
+  const userAgent = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+  const isAndroid = /Android/.test(userAgent);
+  
+  if (isIOS || isAndroid) {
+    isNativeApp.value = true;
+    
+    // Essayer d'ouvrir l'app avec un délai court
+    const deepLinkTimeout = setTimeout(() => {
+      try {
+        // Essayer d'ouvrir le deep link
+        window.location.href = 'https://dun-app.com/successMail';
+      } catch (e) {
+        // Si ça échoue, rester sur la page web
+      }
+    }, 500);
+    
+    // Nettoyer le timeout si la page est quittée
+    return () => clearTimeout(deepLinkTimeout);
+  }
 });
+
+const openApp = () => {
+  try {
+    window.location.href = 'https://dun-app.com/successMail';
+  } catch (e) {
+    console.error('Erreur lors de l\'ouverture de l\'app:', e);
+  }
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "4LHJ3QQMMH.com.anonymous.Dun",
+        "paths": ["/successMail", "/successMail/*"]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["4LHJ3QQMMH.com.anonymous.Dun"]
+  }
+}
