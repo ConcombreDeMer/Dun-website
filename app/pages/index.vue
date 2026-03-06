@@ -20,13 +20,11 @@
         <p class="hero-subtitle">La productivité simplifiée. Planifie simplement, atteins tes objectifs.</p>
         
         <!-- Mockup -->
-        <div class="mockup-container-hero">
           <img 
-            src="/mockups/1.png" 
+            src="/images/1.png" 
             alt="Mockup de l'application Dun" 
             class="mockup-image"
           />
-        </div>
       </div>
     </section>
 
@@ -204,6 +202,13 @@ const handleSignup = async () => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.image-start {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  width: 300px;
 }
 
 html,
