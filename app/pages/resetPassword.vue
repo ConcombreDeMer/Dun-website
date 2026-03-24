@@ -39,10 +39,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const supabase = useSupabaseClient();
+const user = useSupabaseUser();
 const router = useRouter();
 const route = useRoute();
 
@@ -53,20 +54,22 @@ const errorMsg = ref('');
 const successMsg = ref('');
 
 onMounted(async () => {
-  // Si vous utilisez le flow PKCE (nouveau standard par défaut de Supabase), 
-  // le lien mail contient un paramètre "?code=". 
-  // On s'assure de l'échanger contre une session valide manuellement au cas où 
-  // le module Nuxt ne l'a pas fait automatiquement sur cette page.
+  console.log("URL complète au chargement:", window.location.href);
+
+  // Parfois Nuxt Supabase a besoin d'un petit moment pour traiter le "#access_token" dans l'URL
+  // On écoute les changements d'état d'authentification
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    console.log("Événement d'authentification Supabase:", event);
+    if (session) {
+      console.log("Session récupérée avec succès !");
+    }
+  });
+
+  // Gestion du flow PKCE au cas où
   if (route.query.code) {
     const { error } = await supabase.auth.exchangeCodeForSession(String(route.query.code));
-    if (error) {
-      console.error("Erreur lors de l'échange du code PKCE:", error.message);
-    }
+    if (error) console.error("Erreur exchangeCodeForSession:", error.message);
   }
-
-  // Debug pour vérifier si la session est bien montée :
-  const { data } = await supabase.auth.getSession();
-  console.log("Session actuelle :", data.session);
 });
 
 const handleResetPassword = async () => {
@@ -81,6 +84,19 @@ const handleResetPassword = async () => {
   loading.value = true;
   
   try {
+    // Si la session n'est toujours pas montée mais qu'on a un access_token dans l'URL (Implicit Flow)
+    const hash = window.location.hash;
+    let accessTokenParts = hash.match(/access_token=([^&]+)/);
+    
+    if (accessTokenParts && accessTokenParts[1]) {
+      // On force la mise à jour directement avec l'access token de l'URL si besoin (fallback)
+      await supabase.auth.setSession({
+        access_token: accessTokenParts[1],
+        refresh_token: hash.match(/refresh_token=([^&]+)/)?.[1] || ''
+      });
+    }
+
+    // Mise à jour du mot de passe
     const { error } = await supabase.auth.updateUser({
       password: password.value
     });
@@ -94,7 +110,7 @@ const handleResetPassword = async () => {
     confirmPassword.value = '';
     
     setTimeout(() => {
-      router.push('/');
+      router.push('/'); // Ou vers votre page de login
     }, 2500);
     
   } catch (error: any) {
