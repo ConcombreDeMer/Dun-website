@@ -40,11 +40,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const supabase = useSupabaseClient();
-const user = useSupabaseUser();
 const router = useRouter();
+const route = useRoute();
 
 const password = ref('');
 const confirmPassword = ref('');
@@ -52,13 +52,21 @@ const loading = ref(false);
 const errorMsg = ref('');
 const successMsg = ref('');
 
-onMounted(() => {
-  // Optionnel : on peut détecter spécifiquement l'événement de récupération
-  supabase.auth.onAuthStateChange((event, session) => {
-    if (event == 'PASSWORD_RECOVERY') {
-      console.log('Mode récupération de mot de passe activé.');
+onMounted(async () => {
+  // Si vous utilisez le flow PKCE (nouveau standard par défaut de Supabase), 
+  // le lien mail contient un paramètre "?code=". 
+  // On s'assure de l'échanger contre une session valide manuellement au cas où 
+  // le module Nuxt ne l'a pas fait automatiquement sur cette page.
+  if (route.query.code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(String(route.query.code));
+    if (error) {
+      console.error("Erreur lors de l'échange du code PKCE:", error.message);
     }
-  });
+  }
+
+  // Debug pour vérifier si la session est bien montée :
+  const { data } = await supabase.auth.getSession();
+  console.log("Session actuelle :", data.session);
 });
 
 const handleResetPassword = async () => {
@@ -67,12 +75,6 @@ const handleResetPassword = async () => {
 
   if (password.value !== confirmPassword.value) {
     errorMsg.value = "Les mots de passe ne correspondent pas.";
-    return;
-  }
-
-  // Vérification de sécurité locale
-  if (!user.value) {
-    errorMsg.value = "Aucune session de récupération trouvée. Veuillez utiliser le lien valide reçu par email.";
     return;
   }
 
