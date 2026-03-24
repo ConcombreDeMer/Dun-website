@@ -39,13 +39,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-// On utilise le composable de @nuxtjs/supabase pour récupérer le client
-// Lors du clic sur le lien reçu par mail, Supabase connecte automatiquement l'utilisateur
-// via le hash (#access_token=...) ou le code d'échange (PKCE) présent dans l'URL.
 const supabase = useSupabaseClient();
+const user = useSupabaseUser();
 const router = useRouter();
 
 const password = ref('');
@@ -53,6 +51,15 @@ const confirmPassword = ref('');
 const loading = ref(false);
 const errorMsg = ref('');
 const successMsg = ref('');
+
+onMounted(() => {
+  // Optionnel : on peut détecter spécifiquement l'événement de récupération
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event == 'PASSWORD_RECOVERY') {
+      console.log('Mode récupération de mot de passe activé.');
+    }
+  });
+});
 
 const handleResetPassword = async () => {
   errorMsg.value = '';
@@ -63,10 +70,15 @@ const handleResetPassword = async () => {
     return;
   }
 
+  // Vérification de sécurité locale
+  if (!user.value) {
+    errorMsg.value = "Aucune session de récupération trouvée. Veuillez utiliser le lien valide reçu par email.";
+    return;
+  }
+
   loading.value = true;
   
   try {
-    // La mise à jour du mot de passe utilise la session actuellement active de l'utilisateur
     const { error } = await supabase.auth.updateUser({
       password: password.value
     });
@@ -79,9 +91,7 @@ const handleResetPassword = async () => {
     password.value = '';
     confirmPassword.value = '';
     
-    // Redirection après succès
     setTimeout(() => {
-      // Vous pouvez rediriger vers /login ou la page d'accueil selon votre structure
       router.push('/');
     }, 2500);
     
