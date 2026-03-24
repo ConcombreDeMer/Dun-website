@@ -10,9 +10,13 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@cornerkit/core": "^1.2.0",
+    "@cornerkit/vue": "^1.0.1",
+    "@nuxtjs/supabase": "^2.0.4",
     "nuxt": "^4.3.1",
     "vue": "^3.5.28",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4",
+    "vue-squircle": "^0.2.1"
   },
   "devDependencies": {
     "sass-embedded": "^1.97.3"

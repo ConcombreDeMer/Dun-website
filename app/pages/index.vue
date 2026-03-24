@@ -1,5 +1,7 @@
 <template>
-  <div class="dun-landing">
+  <IndexMobile v-if="isMobile" />
+  
+  <div v-else class="dun-landing">
     <NuxtRouteAnnouncer />
     
     <!-- Header -->
@@ -20,11 +22,18 @@
         <p class="hero-subtitle">La productivité simplifiée. Planifie simplement, atteins tes objectifs.</p>
         
         <!-- Mockup -->
-          <img 
+          <!-- <img 
             src="/images/1.png" 
             alt="Mockup de l'application Dun" 
             class="mockup-image"
-          />
+          /> -->
+
+
+
+        <div class="test">
+
+        </div>
+
       </div>
     </section>
 
@@ -150,7 +159,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useMobileDetection } from '../../composables/useMobileDetection';
+import IndexMobile from './indexMobile.vue';
 
+const { isMobile } = useMobileDetection();
 const email = ref('');
 const loading = ref(false);
 const successMessage = ref('');
@@ -193,6 +205,19 @@ const handleSignup = async () => {
 </script>
 
 <style lang="scss">
+
+.test{
+  width: 440px; 
+  height: 440px; 
+  border-radius: 500px; 
+  background: radial-gradient(77.73% 77.73% at 98.52% 96.25%, #000000 0%, rgba(0, 0, 0, 0.29) 50.52%, rgba(15, 15, 15, 0) 100%), 
+  radial-gradient(141.73% 105.23% at 50% -7.16%, #1d1d1d 0%, rgba(20, 20, 20, 0) 50.73%, rgba(39, 39, 39, 0) 100%), 
+  radial-gradient(112.27% 48.54% at 1.59% 50%, rgba(0, 0, 0, 0.5) 0%, rgba(27, 27, 27, 0.095) 53.91%, rgba(17, 17, 17, 0) 100%), 
+  linear-gradient(153.07deg, #111111 6.37%, rgba(27, 27, 27, 0) 83.82%); background-blend-mode: normal,normal,normal,normal,normal,normal; 
+  filter: blur(0px);
+}
+
+
 @font-face {
   font-family: 'MaFont';
   src: url('/fonts/Satoshi-Variable.ttf') format('truetype');
