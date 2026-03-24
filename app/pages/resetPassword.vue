@@ -3,8 +3,6 @@
 
         <img width="200px" src="/images/7.png" alt="Illustration de réinitialisation du mot de passe" class="illustration" />
 
-
-
         <div class="reset-password-card">
             <h2>Réinitialisation du mot de passe</h2>
             <p class="description">Veuillez entrer votre nouveau mot de passe ci-dessous.</p>
@@ -142,6 +140,7 @@ const handleResetPassword = async () => {
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
     width: 100%;
     max-width: 440px;
+    box-sizing: border-box;
 }
 
 h2 {
@@ -249,5 +248,48 @@ input::placeholder {
     background-color: rgba(144, 238, 144, 0.1);
     color: #2e8b57;
     border: 1px solid rgba(144, 238, 144, 0.3);
+
+.illustration {
+    width: 200px;
+    max-width: 100%;
+    margin-bottom: 24px;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 600px) {
+    .reset-password-container {
+        padding: 16px;
+    }
+
+    .reset-password-card {
+        padding: 24px;
+    }
+
+    h2 {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+
+    .description {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .illustration {
+        width: 150px;
+        margin-bottom: 16px;
+    }
+
+    input {
+        padding: 12px 14px;
+        font-size: 15px;
+    }
+
+    .submit-btn {
+        margin-top: 5px;
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+}
 }
 </style>
