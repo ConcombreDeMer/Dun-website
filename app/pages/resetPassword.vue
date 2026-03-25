@@ -126,10 +126,11 @@ const handleResetPassword = async () => {
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: #f5f5f5;
     font-family: 'MaFont', sans-serif;
     color: #1a1a1a;
     flex-direction: column;
+    
 }
 
 .reset-password-card {
@@ -141,6 +142,7 @@ const handleResetPassword = async () => {
     width: 100%;
     max-width: 440px;
     box-sizing: border-box;
+    margin-bottom: 200px;
 }
 
 h2 {
